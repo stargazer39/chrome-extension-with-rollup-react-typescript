@@ -42,4 +42,37 @@ const popup =  {
   watch: { include: ['manifest.json', 'popup/**/*'] },
 };
 
-export default [popup];
+const worker = {
+  input: "./worker/worker.ts",
+  output: {
+    file: "dist/worker.js",
+    format: "es",
+    sourcemap: true,
+  },
+  plugins:[
+    resolve(),
+    commonjs(),
+    typescript(),
+  ]
+}
+
+const content_script = {
+  input: "./content-script/content-script.ts",
+  output: {
+    file: "dist/content-script/content-script.js",
+    format: "es",
+    sourcemap: true,
+  },
+  plugins:[
+    resolve(),
+    commonjs(),
+    typescript(),
+    copy({
+        targets: [
+            { src: './content-script/*.css', dest: 'dist/content-script' },
+        ]
+    })
+  ]
+}
+
+export default [popup, worker, content_script];
